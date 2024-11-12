@@ -10,11 +10,24 @@ const app = require('./src/app');
 const {seedMusician} = require("./seedData");
 
 
-describe('./musicians endpoint', () => {
+describe('./musicians endpoint', async () => {
     // Write your tests here
+    let value;
+        await fetch('http://localhost:3000/musicians/2',
+        {
+            headers: {'Content-type': 'application/json'},
+            method: 'POST',
+            mode: 'no-cors',
+            redirect: 'follow'
+        }
+    )
+    .then(response => response.text())
+    .then(result=>JSON.parse(result))
+    .then(result => value=result.name)
     
-    
-
+    test('Can get value', async function(){
+        expect(value).toBe('drake');
+    })
 
 
 
