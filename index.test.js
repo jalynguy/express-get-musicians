@@ -12,24 +12,15 @@ const {seedMusician} = require("./seedData");
 
 describe('./musicians endpoint', async () => {
     // Write your tests here
-    let value;
-        await fetch('http://localhost:3000/musicians/2',
-        {
-            headers: {'Content-type': 'application/json'},
-            method: 'POST',
-            mode: 'no-cors',
-            redirect: 'follow'
-        }
-    )
-    .then(response => response.text())
-    .then(result=>JSON.parse(result))
-    .then(result => value=result.name)
-    
-    test('Can get value', async function(){
-        expect(value).toBe('drake');
-    })
-
-
-
-    
+    test('Returns correct response'), async () =>{
+        const response = await request(server).get("/people/1");
+        expect(response.statusCode).toBe(200);
+        const responseData = JSON.parse(response.text);
+        expect(responseData).toEqual(
+            {
+                name: 'Mick Jagger',
+                instrument: 'Voice'
+            }
+        )
+    }
 })
