@@ -2,7 +2,7 @@ const express = require("express");
 const musician = express.Router();
 const { Musician } = require("../../models/index.js")
 const { db } = require("../../db/connection.js")
-const port = 3000;
+const { check, validationResult } = require('express-validator')
 musician.get('/', async (req, res) =>{
     const result = await Musician.findAll();
     res.send(result);
@@ -17,9 +17,20 @@ musician.use(express.json());
 musician.use(express.urlencoded());
 
 // Post Methods 
-musician.post('/', async (req, res) =>{
-    const result = await Musician.create(req.body);
-    res.send(result).json();
+musician.post('/', 
+    [
+        check("name").not().isEmpty().trim(),
+        check("instrument").not().isEmpty().trim()
+    ]
+,async (req, res) =>{
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        res.json({error: errors.array()})
+    }
+    else{
+        const result = await Musician.create(req.body);
+        res.send(result).json();
+    }
 });
 
 musician.put('/:id', async (req, res) =>{
