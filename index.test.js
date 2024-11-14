@@ -13,7 +13,7 @@ const {seedMusician} = require("./seedData");
 describe('./musicians endpoint', async () => {
     // Write your tests here
     test('Returns correct response'), async () =>{
-        const response = await request(server).get("/people/1");
+        const response = await request(server).get("/musicians/1");
         expect(response.statusCode).toBe(200);
         const responseData = JSON.parse(response.text);
         expect(responseData).toEqual(
@@ -23,4 +23,10 @@ describe('./musicians endpoint', async () => {
             }
         )
     }
+    test('Returns correct error response', async()=>{
+        const updateMusician = { name: '', instrument: 'None' }
+        const response = await request(server).post(`/musicians`)
+        .send(updateMusician);
+        expect(response,statusCode).toBe(200);
+    })
 })

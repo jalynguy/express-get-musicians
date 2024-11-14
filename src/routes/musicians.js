@@ -19,8 +19,8 @@ musician.use(express.urlencoded());
 // Post Methods 
 musician.post('/', 
     [
-        check("name").not().isEmpty().trim(),
-        check("instrument").not().isEmpty().trim()
+        check("name").not().isEmpty().trim().isLength({min: 2, max: 20}),
+        check("instrument").not().isEmpty().trim().isLength({min: 2, max: 20})
     ]
 ,async (req, res) =>{
     const errors = validationResult(req);
@@ -33,13 +33,23 @@ musician.post('/',
     }
 });
 
-musician.put('/:id', async (req, res) =>{
-    const result = await Musician.update(req.body, {
-        where: {
-            id: req.params.id
+musician.put('/:id',    
+    [
+        check("name").not().isEmpty().trim().isLength({min: 2, max: 20}),
+        check("instrument").not().isEmpty().trim().isLength({min: 2, max: 20})
+    ],
+    async (req, res) =>{
+        if(!errors.isEmpty()){
+            res.json({error: errors.array()})
         }
-    })
-    res.send(result).json();
+        else{
+            const result = await Musician.update(req.body, {
+                where: {
+                    id: req.params.id
+                }
+            })
+            res.send(result).json();
+        }
 });
 
 musician.delete('/:id', async (req, res) =>{
